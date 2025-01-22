@@ -1,0 +1,8 @@
+.searchIcon {
+	position: absolute;
+	width: 28px;
+	height: 28px;
+	top: 14px;
+	right: 20px;
+	cursor: pointer;
+}

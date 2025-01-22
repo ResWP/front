@@ -1,0 +1,47 @@
+.navigationList {
+	display: flex;
+	gap: 12px;
+
+	li a {
+		font-size: 18px;
+		color: #5d3a4e;
+	}
+	li a:hover {
+		text-decoration: underline;
+	}
+}
+.icon {
+	height: 28px;
+	width: 28px;
+}
+.drawer {
+	button {
+		margin-left: auto;
+		margin-top: 16px;
+		margin-right: 16px;
+		width: fit-content;
+	}
+
+	nav {
+		margin-block: auto;
+	}
+
+	.close {
+		transition: transform 250ms ease;
+		.icon {
+			transition: stroke 250ms ease;
+		}
+	}
+	.close:hover {
+		.icon {
+			stroke: #b20c0c;
+		}
+		transform: scale(1.3);
+	}
+
+	.navigationList {
+		flex-direction: column;
+		width: 100dvw;
+		text-align: center;
+	}
+}
