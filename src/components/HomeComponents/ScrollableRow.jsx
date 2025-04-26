@@ -1,6 +1,7 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 
-const ScrollableRow = ({ theme, isSmall, children }) => {
+const ScrollableRow = ({ isSmall, children }) => {
+	const theme = useTheme();
 	return (
 		<Box
 			sx={{
@@ -10,10 +11,8 @@ const ScrollableRow = ({ theme, isSmall, children }) => {
 				paddingBlock: isSmall ? 2 : 3,
 				paddingInline: 2,
 				scrollbarWidth: "thin",
-				scrollbarColor: `${theme.palette.primary.light} ${theme.palette.grey[300]}`,
-				backgroundColor: theme.palette.secondary.main,
+				scrollbarColor: `${theme.palette.secondary.main} ${theme.palette.grey[300]}`,
 				borderRadius: 4,
-				boxShadow: 4,
 				"&::-webkit-scrollbar": {
 					height: "6px",
 				},

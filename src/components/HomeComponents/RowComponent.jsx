@@ -1,39 +1,32 @@
-import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import RowCard from "./RowCard";
 import ScrollableRow from "./ScrollableRow";
+import EmptyMessage from "../Structures/EmptyMessage";
 
-const RowComponent = ({ title, books = [] }) => {
-	const isSmall = useMediaQuery("(max-width: 765px)");
-	const theme = useTheme();
+const RowComponent = ({ title, emptyMessage, books = [] }) => {
+  const isSmall = useMediaQuery("(max-width: 765px)");
 
-	return (
-		<Box sx={{ mb: isSmall ? 3 : 5 }}>
-			<Typography
-				variant="h5"
-				fontWeight={600}
-				mb={isSmall ? 1 : 2}
-				color={theme.palette.primary.contrastText}
-			>
-				{title}
-			</Typography>
-			<ScrollableRow isSmall={isSmall} theme={theme}>
-				{books.length ? (
-					books.map((book) => (
-						<RowCard key={"rw-" + book.id} book={book} isSmall={isSmall} />
-					))
-				) : (
-					<Typography
-						variant="h5"
-						fontWeight={600}
-						mb={isSmall ? 1 : 2}
-						color={theme.palette.primary.contrastText}
-					>
-						No books present
-					</Typography>
-				)}
-			</ScrollableRow>
-		</Box>
-	);
+  return (
+    <Box sx={{ mb: isSmall ? 3 : 5 }}>
+      <Typography
+        variant="h5"
+        fontWeight={600}
+        mb={isSmall ? 1 : 2}
+        color="primary.contrastText"
+      >
+        {title}
+      </Typography>
+      {books.length ? (
+        <ScrollableRow isSmall={isSmall}>
+          {books.map((book) => (
+            <RowCard key={"rw-" + book._id} book={book} isSmall={isSmall} />
+          ))}
+        </ScrollableRow>
+      ) : (
+        <EmptyMessage>{emptyMessage}</EmptyMessage>
+      )}
+    </Box>
+  );
 };
 
 export default RowComponent;

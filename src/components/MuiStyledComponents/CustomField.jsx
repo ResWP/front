@@ -2,7 +2,7 @@ import { Field } from "formik";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
-const FormField = ({
+const CustomField = ({
 	name,
 	label,
 	type = "text",
@@ -27,4 +27,4 @@ const FormField = ({
 	</Box>
 );
 
-export default FormField;
+export default CustomField;

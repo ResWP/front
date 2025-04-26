@@ -1,19 +1,19 @@
 import Box from "@mui/material/Box";
 
-const BoxContainer = ({
+const CustomBox = ({
 	width = "100%",
-	maxWidth = 400,
+	maxWidth = 800,
 	mt = 3,
-	p = 3,
-	bgcolor = "background.paper",
-	boxShadow = 3,
+	p = 2,
+	boxShadow = 1,
 	borderRadius = 2,
+	bgcolor = "background.paper",
 	children,
 	...rest
 }) => (
 	<Box
 		sx={{
-			minWidth: "min(320px, 100%)",
+			minWidth: 300,
 			width: width,
 			maxWidth: maxWidth,
 			mt: mt,
@@ -29,4 +29,4 @@ const BoxContainer = ({
 	</Box>
 );
 
-export default BoxContainer;
+export default CustomBox;

@@ -1,14 +1,37 @@
 import { Box } from "@mui/material";
 import RatedCard from "./RatedCard";
+import EmptyMessage from "../Structures/EmptyMessage";
 
 const RatedList = ({ ratedBooks, isSmall }) => {
-	return (
-		<Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 3 }}>
-			{ratedBooks.map((book) => (
-				<RatedCard key={`rtd-${book.id}`} book={book} isSmall={isSmall} />
-			))}
-		</Box>
-	);
+  // ratedBooks has structure [{ rating, book: { ... } }, ...]
+  // and we need to extract book from it
+  const books = ratedBooks.map((ratedBook) => ratedBook.book);
+  // and we need to extract rating from it
+  const ratings = ratedBooks.map((ratedBook) => ratedBook.rating);
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        mt: { xs: 2, sm: 4, md: 0 },
+      }}
+    >
+      {books.length ? (
+        books.map((book, index) => (
+          <RatedCard
+            key={`rtd-${book?._id}`}
+            book={book}
+            rating={ratings[index]}
+            isSmall={isSmall}
+          />
+        ))
+      ) : (
+        <EmptyMessage>Оцінок не знайдено</EmptyMessage>
+      )}
+    </Box>
+  );
 };
 
 export default RatedList;
