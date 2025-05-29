@@ -17,7 +17,6 @@ const LibraryList = ({ books }) => {
             key={"lb-" + book._id}
             size={{ xs: 2, sm: 4, md: 4, lg: 3 }}
             sx={{ textAlign: "center" }}
-            // style={{ width: "100%" }}
           >
             <Link to={`/books/${book._id}`}>
               <LibraryCard book={book} />
