@@ -15,11 +15,11 @@ const LoginForm = () => {
     dispatch(login(values))
       .unwrap()
       .then(() => {
-        toast.success("Login successful");
+        toast.success("Вхід виконано успішно");
         resetForm();
       })
       .catch(() => {
-        toast.error("Login failed. Please check your credentials.");
+        toast.error("Сталася помилка, перевірте логін і пароль");
       })
       .finally(() => {
         setSubmitting(false);

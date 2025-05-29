@@ -8,7 +8,7 @@ export default defineConfig({
     proxy: {
       "/api": {
         // Redirects all `/api/*` calls to your backend
-        target: "http://localhost:3000",
+        target: "https://tback-dalv.onrender.com",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },

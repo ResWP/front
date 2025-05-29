@@ -2,21 +2,33 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Get all books with pagination, sorting, and filtering
+
 export const getBooks = createAsyncThunk(
-  "/books/getBooks",
+  "books/getBooks",
   async (params = {}, thunkAPI) => {
     try {
       const state = thunkAPI.getState();
       const { books } = state;
 
-      // Combine default state with any passed params
-      const queryParams = new URLSearchParams({
-        page: params.page || books.pagination.page,
-        perPage: params.perPage || books.pagination.perPage,
-        sortBy: params.sortBy || books.sortBy,
-        sortOrder: params.sortOrder || books.sortOrder,
-        ...books.filter,
-        ...params.filter,
+      // Build query parameters matching backend expectations
+      const queryParams = new URLSearchParams();
+
+      // Pagination
+      queryParams.append("page", params.page || books.pagination.page);
+      queryParams.append("perPage", params.perPage || books.pagination.perPage);
+
+      // Sorting
+      queryParams.append("sortBy", params.sortBy || books.sortBy);
+      queryParams.append("sortOrder", params.sortOrder || books.sortOrder);
+
+      // Filters - merge state filters with passed params
+      const filters = { ...books.filter, ...params.filter };
+
+      // Add filter parameters to query string
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          queryParams.append(key, value);
+        }
       });
 
       const { data } = await axios.get(`/books?${queryParams}`);
@@ -58,7 +70,7 @@ export const getBestBooks = createAsyncThunk(
     }
   }
 );
-// In your getRecentBooks function
+
 export const getRecentBooks = createAsyncThunk(
   "books/getRecentBooks",
   async (_, thunkAPI) => {
@@ -66,7 +78,6 @@ export const getRecentBooks = createAsyncThunk(
       const state = thunkAPI.getState();
       const token = state.auth.token;
 
-      // Explicitly set the auth header before this specific request
       if (token) {
         axios.defaults.headers.common.Authorization = `Bearer ${token}`;
       } else {
@@ -74,7 +85,7 @@ export const getRecentBooks = createAsyncThunk(
         return thunkAPI.rejectWithValue("No authentication token available");
       }
 
-      const { data } = await axios.get("/books/recent");
+      const { data } = await axios.post("/books/recent");
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -83,15 +94,16 @@ export const getRecentBooks = createAsyncThunk(
     }
   }
 );
+
 // Get special books (recommendations)
 export const getSpecialBooks = createAsyncThunk(
   "books/getSpecialBooks",
-  async (recommendationData = {}, thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
       const state = thunkAPI.getState();
       const token = state.auth.token;
+      console.log(state);
 
-      // Explicitly set the auth header before this specific request
       if (token) {
         axios.defaults.headers.common.Authorization = `Bearer ${token}`;
       } else {
@@ -99,9 +111,7 @@ export const getSpecialBooks = createAsyncThunk(
         return thunkAPI.rejectWithValue("No authentication token available");
       }
 
-      const { data } = await axios.get("/books/special", {
-        data: recommendationData,
-      });
+      const { data } = await axios.post("/books/special");
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(

@@ -35,7 +35,6 @@ const Book = () => {
   const isLoading = useSelector(selectBooksLoading);
   const error = useSelector(selectBooksError);
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  const user = useSelector(selectUser);
   const userRatings = useSelector(selectUserRatings);
 
   const [openModal, setOpenModal] = useState(false);
@@ -46,15 +45,12 @@ const Book = () => {
 
   useEffect(() => {
     dispatch(getBookById(bookId));
-
-    // If user is logged in, fetch ratings data
     if (isLoggedIn) {
       dispatch(getUserRatings());
       dispatch(getBookRatings(bookId));
     }
   }, [dispatch, bookId, isLoggedIn]);
 
-  // Find user's current rating for this book (if any)
   useEffect(() => {
     if (userRatings && userRatings.length > 0) {
       const userRating = userRatings.find((r) => r.bookId === bookId);
@@ -67,7 +63,7 @@ const Book = () => {
 
   const handleModalOpen = () => {
     if (!isLoggedIn) {
-      toast.error("Please log in to rate books");
+      toast.error("Будь ласка зареєструйтесь щоб оцінювати книги");
       return;
     }
     setOpenModal(true);
@@ -77,7 +73,7 @@ const Book = () => {
 
   const handleSave = () => {
     if (!isLoggedIn) {
-      toast.error("Please log in to rate books");
+      toast.error("Будь ласка зареєструйтесь щоб оцінювати книги");
       return;
     }
 
@@ -87,7 +83,7 @@ const Book = () => {
 
   const handleDelete = () => {
     if (!isLoggedIn) {
-      toast.error("Please log in to manage ratings");
+      toast.error("Будь ласка зареєструйтесь щоб видаляти оцінки");
       return;
     }
 
@@ -182,7 +178,10 @@ const Book = () => {
         }}
       >
         <Typography variant="h4" fontSize={{ xs: 24, sm: 28, md: 32 }}>
-          {book.bookTitle}
+          {book.bookTitle}{" "}
+          <Typography color="info" variant="body">
+            {book.avgRating?.toFixed(2)}
+          </Typography>
         </Typography>
         <Typography
           variant="body1"

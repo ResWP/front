@@ -2,12 +2,12 @@ import { Box } from "@mui/material";
 import RatedCard from "./RatedCard";
 import EmptyMessage from "../Structures/EmptyMessage";
 
-const RatedList = ({ ratedBooks, isSmall }) => {
+const RatedList = ({ books, ratings, isSmall }) => {
   // ratedBooks has structure [{ rating, book: { ... } }, ...]
   // and we need to extract book from it
-  const books = ratedBooks.map((ratedBook) => ratedBook.book);
+  // const books = ratedBooks.map((ratedBook) => ratedBook.book);
   // and we need to extract rating from it
-  const ratings = ratedBooks.map((ratedBook) => ratedBook.rating);
+  console.log(books);
   return (
     <Box
       sx={{

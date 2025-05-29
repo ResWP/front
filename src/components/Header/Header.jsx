@@ -2,7 +2,7 @@ import { AppBar, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import DrawerComponent from "./Drawer";
 import Navigation from "./Navigation";
 import { Link } from "react-router-dom";
-import Demo from "./Demo";
+// import Demo from "./Demo";
 
 const Header = () => {
   const wideScreen = useMediaQuery("(min-width:850px)");
@@ -23,7 +23,7 @@ const Header = () => {
           >
             <Link to="/">LitPix</Link>
           </Typography>
-          {wideScreen && <Demo isWide={wideScreen} />}
+          {/* {wideScreen && <Demo isWide={wideScreen} />} */}
 
           {wideScreen ? (
             <Navigation isWide={wideScreen} />

@@ -1,3 +1,4 @@
+// booksSlice.js - Updated slice with better filter management
 import { createSlice } from "@reduxjs/toolkit";
 import {
   getBooks,
@@ -21,7 +22,16 @@ const initialState = {
     hasNextPage: false,
     hasPreviousPage: false,
   },
-  filter: {},
+  filter: {
+    title: "",
+    author: "",
+    publisher: "",
+    minYear: undefined,
+    maxYear: undefined,
+    minAvgRating: undefined,
+    maxAvgRating: undefined,
+    isRated: undefined,
+  },
   sortBy: "_id",
   sortOrder: "asc",
   loading: false,
@@ -33,26 +43,65 @@ const booksSlice = createSlice({
   initialState,
   reducers: {
     setFilter: (state, action) => {
+      // Merge new filters with existing ones
       state.filter = { ...state.filter, ...action.payload };
+      // Reset to first page when filters change
       state.pagination.page = 1;
     },
     clearFilter: (state) => {
-      state.filter = {};
+      state.filter = {
+        title: "",
+        author: "",
+        publisher: "",
+        minYear: undefined,
+        maxYear: undefined,
+        minAvgRating: undefined,
+        maxAvgRating: undefined,
+        isRated: undefined,
+      };
+      state.pagination.page = 1;
     },
     setSort: (state, action) => {
       const { sortBy, sortOrder } = action.payload;
-      state.sortBy = sortBy || state.sortBy;
-      state.sortOrder = sortOrder || state.sortOrder;
+      if (sortBy) state.sortBy = sortBy;
+      if (sortOrder) state.sortOrder = sortOrder;
+      // Reset to first page when sorting changes
+      state.pagination.page = 1;
     },
     setPage: (state, action) => {
       state.pagination.page = action.payload;
     },
     setPerPage: (state, action) => {
       state.pagination.perPage = action.payload;
-      state.pagination.page = 1; // Reset to first page when changing items per page
+      state.pagination.page = 1;
     },
     clearError: (state) => {
       state.error = null;
+    },
+    // New actions for better URL sync
+    setSearchQuery: (state, action) => {
+      state.filter.title = action.payload;
+      state.pagination.page = 1;
+    },
+    setAuthorFilter: (state, action) => {
+      state.filter.author = action.payload;
+      state.pagination.page = 1;
+    },
+    setPublisherFilter: (state, action) => {
+      state.filter.publisher = action.payload;
+      state.pagination.page = 1;
+    },
+    setYearRange: (state, action) => {
+      const { minYear, maxYear } = action.payload;
+      state.filter.minYear = minYear;
+      state.filter.maxYear = maxYear;
+      state.pagination.page = 1;
+    },
+    setRatingRange: (state, action) => {
+      const { minAvgRating, maxAvgRating } = action.payload;
+      state.filter.minAvgRating = minAvgRating;
+      state.filter.maxAvgRating = maxAvgRating;
+      state.pagination.page = 1;
     },
   },
   extraReducers: (builder) => {
@@ -140,5 +189,11 @@ export const {
   setPage,
   setPerPage,
   clearError,
+  setSearchQuery,
+  setAuthorFilter,
+  setPublisherFilter,
+  setYearRange,
+  setRatingRange,
 } = booksSlice.actions;
+
 export const booksReducer = booksSlice.reducer;

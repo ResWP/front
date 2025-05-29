@@ -2,12 +2,13 @@ import { NavLink } from "react-router-dom";
 import css from "./styles.module.css";
 import { Button } from "@mui/material";
 import AuthNav from "../Auth/AuthNav";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectIsLoggedIn } from "../../redux/auth/selectors";
+import { logout } from "../../redux/auth/operations";
 
 const Navigation = ({ toggleDrawer = function () {}, isWide }) => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
-
+  const dispatch = useDispatch();
   return (
     <nav>
       <ul className={css.navigationList}>
@@ -18,13 +19,22 @@ const Navigation = ({ toggleDrawer = function () {}, isWide }) => {
         </li>
         <li>
           {isLoggedIn ? (
-            <Button
-              component={NavLink}
-              to="/ratings"
-              onClick={toggleDrawer(false)}
-            >
-              Оцінки
-            </Button>
+            <>
+              <Button
+                component={NavLink}
+                to="/ratings"
+                onClick={toggleDrawer(false)}
+              >
+                Оцінки
+              </Button>
+              <Button
+                component={NavLink}
+                to="/login"
+                onClick={() => dispatch(logout())}
+              >
+                Вийти
+              </Button>
+            </>
           ) : (
             <AuthNav isWide={isWide} />
           )}

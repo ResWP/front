@@ -3,10 +3,10 @@ import { login, logout, register } from "./operations";
 
 const initialState = {
   user: {
-    name: null,
-    email: null,
-    age: null,
-    location: null,
+    name: "Jane",
+    email: "jane2@gmail.com",
+    age: 22,
+    location: "Kiyv",
   },
   token: null,
   isLoggedIn: false,

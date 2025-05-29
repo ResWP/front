@@ -1,66 +1,83 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import booksData from "../data/books";
-import ratedBooks from "../data/ratedBooks";
 
-const useFilteredBooks = (rated = false, limit = 4) => {
+const useFilteredBooks = (rated, limit = 10) => {
   const [searchParams] = useSearchParams();
   const [currentLimit, setCurrentLimit] = useState(limit);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [displayedBooks, setDisplayedBooks] = useState([]);
   const [hasMoreBooks, setHasMoreBooks] = useState(false);
-
+  console.log(rated);
   useEffect(() => {
-    let filtered = rated ? ratedBooks : booksData;
-
+    // Extract books from rated items and include the rating information
+    let booksWithRatings = rated.map((item) => ({
+      ...item.book,
+      comment: item.comment,
+      userRating: item.rating, // Include the user's rating
+    }));
+    console.log(rated);
     const query = searchParams.get("query");
     const author = searchParams.get("author");
     const publisher = searchParams.get("publisher");
     const sortby = searchParams.get("sortby");
     const order = searchParams.get("order");
     const rate = searchParams.get("rate");
-    const date = searchParams.get("date");
+    const year = searchParams.get("year"); // Changed from 'date' to 'year'
+
+    // Apply filters
+    let filtered = [...booksWithRatings];
 
     if (query) {
       filtered = filtered.filter((book) =>
-        book.title.toLowerCase().includes(query.toLowerCase())
+        book?.bookTitle?.toLowerCase().includes(query.toLowerCase())
       );
     }
 
     if (author) {
-      filtered = filtered.filter(
-        (book) =>
-          book.author &&
-          book.author.toLowerCase().includes(author.toLowerCase())
+      filtered = filtered.filter((book) =>
+        book?.bookAuthor?.toLowerCase().includes(author.toLowerCase())
       );
     }
 
     if (publisher) {
-      filtered = filtered.filter(
-        (book) =>
-          book.publisher &&
-          book.publisher.toLowerCase().includes(publisher.toLowerCase())
+      filtered = filtered.filter((book) =>
+        book?.publisher?.toLowerCase().includes(publisher.toLowerCase())
       );
     }
 
     if (rate) {
       const [minRate, maxRate] = rate.split(",").map(Number);
       filtered = filtered.filter(
-        (book) => book.rate >= minRate && book.rate <= maxRate
+        (book) => book.userRating >= minRate && book.userRating <= maxRate
       );
     }
 
-    if (date) {
-      const [minDate, maxDate] = date.split(",").map(Number);
-      filtered = filtered.filter(
-        (book) => book.year >= minDate && book.year <= maxDate
-      );
+    if (year) {
+      const [minYear, maxYear] = year.split(",").map(Number);
+      filtered = filtered.filter((book) => {
+        const pubYear = book.yearOfPublication;
+        return pubYear >= minYear && pubYear <= maxYear;
+      });
     }
 
     if (sortby) {
       filtered = filtered.sort((a, b) => {
-        if (a[sortby] < b[sortby]) return order === "asc" ? -1 : 1;
-        if (a[sortby] > b[sortby]) return order === "asc" ? 1 : -1;
+        // Handle different sort fields
+        let aValue, bValue;
+
+        if (sortby === "rating") {
+          aValue = a.userRating;
+          bValue = b.userRating;
+        } else if (sortby === "year") {
+          aValue = a.yearOfPublication;
+          bValue = b.yearOfPublication;
+        } else {
+          aValue = a[sortby];
+          bValue = b[sortby];
+        }
+
+        if (aValue < bValue) return order === "asc" ? -1 : 1;
+        if (aValue > bValue) return order === "asc" ? 1 : -1;
         return 0;
       });
     }
@@ -71,7 +88,7 @@ const useFilteredBooks = (rated = false, limit = 4) => {
   }, [searchParams, rated, currentLimit]);
 
   const loadMore = () => {
-    setCurrentLimit((prevLimit) => prevLimit + limit);
+    setCurrentLimit((prev) => prev + limit);
   };
 
   useEffect(() => {
@@ -79,7 +96,12 @@ const useFilteredBooks = (rated = false, limit = 4) => {
     setHasMoreBooks(currentLimit < filteredBooks.length);
   }, [filteredBooks, currentLimit]);
 
-  return { filteredBooks: displayedBooks, loadMore, hasMoreBooks };
+  return {
+    filteredBooks: displayedBooks,
+    loadMore,
+    hasMoreBooks,
+    totalBooks: filteredBooks.length,
+  };
 };
 
 export default useFilteredBooks;

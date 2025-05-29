@@ -1,13 +1,14 @@
 import { Box, MenuItem, TextField } from "@mui/material";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUserDetails } from "../../redux/auth/slice";
+import { selectUser } from "../../redux/auth/selectors";
 
 export const Demo = ({ isWide }) => {
   const dispatch = useDispatch();
-
-  const [age, setAge] = useState("");
-  const [location, setLocation] = useState("");
+  const user = useSelector(selectUser);
+  const [age, setAge] = useState(user.age ?? "");
+  const [location, setLocation] = useState(user.location ?? "");
 
   const cities = [
     { label: "Київ", value: "kyiv" },

@@ -10,7 +10,7 @@ export const selectPerPage = (state) => state.books.pagination.perPage;
 export const selectTotalItems = (state) => state.books.pagination.totalItems;
 export const selectTotalPages = (state) => state.books.pagination.totalPages;
 
-export const selectFilter = (state) => state.books.filter;
+export const selectFilters = (state) => state.books.filter;
 export const selectSortBy = (state) => state.books.sortBy;
 export const selectSortOrder = (state) => state.books.sortOrder;
 

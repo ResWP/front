@@ -4,7 +4,7 @@ import { IoIosMenu } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
 import Navigation from "./Navigation";
 import css from "./styles.module.css";
-import Demo from "./Demo";
+// import Demo from "./Demo";
 
 const DrawerComponent = () => {
   const [open, setOpen] = useState(false);
@@ -33,7 +33,7 @@ const DrawerComponent = () => {
           <IoCloseOutline className={css.icon} />
         </IconButton>
         <Navigation toggleDrawer={toggleDrawer} />
-        <Demo />
+        {/* <Demo /> */}
       </Drawer>
     </>
   );
