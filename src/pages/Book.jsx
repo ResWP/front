@@ -26,10 +26,15 @@ import {
 import { selectIsLoggedIn, selectUser } from "../redux/auth/selectors";
 import { selectUserRatings } from "../redux/ratings/selectors";
 import toast from "react-hot-toast";
+import { useRef } from "react";
 
 const Book = () => {
   const { bookId } = useParams();
   const dispatch = useDispatch();
+  const imgRef = useRef(null);
+  const [imgSrc, setImgSrc] = useState(null);
+  const fallbackCover =
+    "https://m.media-amazon.com/images/I/81QPHl7zgbL._AC_UF1000,1000_QL80_.jpg";
 
   const book = useSelector(selectCurrentBook);
   const isLoading = useSelector(selectBooksLoading);
@@ -42,6 +47,32 @@ const Book = () => {
   const [comment, setComment] = useState("");
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isExtraSmallScreen = useMediaQuery("(max-width: 400px)");
+
+  useEffect(() => {
+    if (book?.imageUrlL) {
+      setImgSrc(book.imageUrlL);
+    }
+  }, [book]);
+
+  useEffect(() => {
+    if (imgRef.current) {
+      const checkImageSize = () => {
+        if (
+          imgRef.current?.naturalWidth === 1 &&
+          imgRef.current?.naturalHeight === 1
+        ) {
+          setImgSrc(fallbackCover);
+        }
+      };
+
+      imgRef.current.addEventListener("load", checkImageSize);
+      return () => {
+        if (imgRef.current) {
+          imgRef.current.removeEventListener("load", checkImageSize);
+        }
+      };
+    }
+  }, [imgSrc]);
 
   useEffect(() => {
     dispatch(getBookById(bookId));
@@ -157,14 +188,18 @@ const Book = () => {
       {/* Book Image */}
       <Box
         component="img"
-        src={book.imageUrlL}
+        src={imgSrc || fallbackCover}
         alt={book.bookTitle}
+        ref={imgRef}
+        onError={() => setImgSrc(fallbackCover)}
         sx={{
           width: isSmallScreen ? "100%" : "40%",
           maxWidth: "400px",
           height: "auto",
           borderRadius: 2,
           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+          backgroundColor: (theme) =>
+            imgSrc === fallbackCover ? theme.palette.grey[200] : "transparent",
         }}
       />
       {/* Text Content */}
